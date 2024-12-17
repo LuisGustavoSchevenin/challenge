@@ -1,8 +1,10 @@
 package br.com.challenge.adapter.dto;
 
-public record UserResponse(
+public record CadastroResponse(
+        String cadastroId,
         String nome,
         String sobrenome,
+        String cpf,
         int idade,
         String pais,
         String dataCriacao,

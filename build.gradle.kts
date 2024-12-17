@@ -22,9 +22,17 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 
     // DATABASE
     runtimeOnly("com.h2database:h2")
+
+    // MAPPER
+    implementation("org.mapstruct:mapstruct:1.6.3")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+
+    // LOG
+    implementation("org.apache.logging.log4j:log4j-core:2.24.2")
 
     // TEST
     testImplementation("org.springframework.boot:spring-boot-starter-test")

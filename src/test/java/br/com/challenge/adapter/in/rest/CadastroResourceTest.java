@@ -1,7 +1,7 @@
 package br.com.challenge.adapter.in.rest;
 
-import br.com.challenge.adapter.dto.UserRequest;
-import br.com.challenge.adapter.dto.UserResponse;
+import br.com.challenge.adapter.dto.CadastroRequest;
+import br.com.challenge.adapter.dto.CadastroResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,24 +12,24 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class UserResourceTest {
+public class CadastroResourceTest {
 
     @Autowired
     private WebTestClient client;
 
     @Test
-    public void shouldCreateAnUSer() {
-        UserRequest request = new UserRequest("Sarah", "Connor", 20, "Brasil");
+    public void shouldCreateACadastro() {
+        CadastroRequest request = new CadastroRequest("Sarah", "Connor", "12345654322", 20, "Brasil");
 
-        UserResponse result = client.post()
-                .uri("/user/create")
+        CadastroResponse result = client.post()
+                .uri("/cadastro/adicionar")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .exchange()
                 .expectStatus()
                 .isCreated()
-                .expectBody(UserResponse.class)
+                .expectBody(CadastroResponse.class)
                 .returnResult()
                 .getResponseBody();
 
