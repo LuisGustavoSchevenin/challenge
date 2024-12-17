@@ -8,9 +8,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
-@Mapper(componentModel =  MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CadastroMapper {
 
+    @Mapping(target = "cpf", expression = "java( cadastroRequest.cpf().replaceAll(\"[^a-zA-Z0-9]\", \"\") )")
     Cadastro toCadastro(CadastroRequest cadastroRequest);
 
     @Mapping(target = "id", ignore = true)
