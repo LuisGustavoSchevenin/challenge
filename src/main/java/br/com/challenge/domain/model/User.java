@@ -1,4 +1,4 @@
-package br.com.challenge.domain;
+package br.com.challenge.domain.model;
 
 import java.util.UUID;
 
