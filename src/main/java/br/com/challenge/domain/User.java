@@ -5,10 +5,10 @@ import java.util.UUID;
 public class User {
 
     private UUID id;
-    private String firstName;
-    private String lastName;
-    private int age;
-    private String country;
+    private String nome;
+    private String sobrenome;
+    private int idade;
+    private String pais;
 
 
     public UUID getId() {
@@ -19,35 +19,35 @@ public class User {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getNome() {
+        return nome;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getSobrenome() {
+        return sobrenome;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
     }
 
-    public int getAge() {
-        return age;
+    public int getIdade() {
+        return idade;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setIdade(int idade) {
+        this.idade = idade;
     }
 
-    public String getCountry() {
-        return country;
+    public String getPais() {
+        return pais;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setPais(String pais) {
+        this.pais = pais;
     }
 }
