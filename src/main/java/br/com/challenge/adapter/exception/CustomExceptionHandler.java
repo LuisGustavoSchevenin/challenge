@@ -2,6 +2,8 @@ package br.com.challenge.adapter.exception;
 
 import br.com.challenge.adapter.dto.Error;
 import br.com.challenge.adapter.dto.ErrorResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -16,11 +18,14 @@ import java.util.List;
 @ControllerAdvice
 public class CustomExceptionHandler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CustomExceptionHandler.class);
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        List<FieldError> fieldErrors = ex.getFieldErrors();
+        LOG.error("An MethodArgumentNotValidException was thrown: {}", ex.getMessage());
 
+        List<FieldError> fieldErrors = ex.getFieldErrors();
         List<Error> errors = new ArrayList<>();
 
         fieldErrors.forEach(fieldError -> {
