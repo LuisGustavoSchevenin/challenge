@@ -29,14 +29,12 @@ public class Fixture {
     }
 
     public static Cadastro buildCadastro() {
-        return new Cadastro.Builder()
-                .nome("Sarah")
-                .sobrenome("Connor")
-                .cpf("123.456.789.10")
-                .email("test@test.com")
-                .idade(20)
-                .pais("Brasil")
-                .build();
+        return new Cadastro("Sarah",
+                "Connor",
+                "123.456.789.10",
+                "test@test.com",
+                20,
+                "Brasil");
     }
 
     public static CadastroEntity buildCadastroEntity() {
@@ -51,6 +49,19 @@ public class Fixture {
         cadastroEntity.setPais("Brasil");
         cadastroEntity.setDataCriacao(LocalDateTime.now());
         cadastroEntity.setDataAtualizacao(LocalDateTime.now());
+
+        return cadastroEntity;
+    }
+
+    public static CadastroEntity buildCadastroEntity(final String cpf) {
+        CadastroEntity cadastroEntity = new CadastroEntity();
+        cadastroEntity.setCadastroId(UUID.randomUUID().toString());
+        cadastroEntity.setNome("Sarah");
+        cadastroEntity.setSobrenome("Connor");
+        cadastroEntity.setCpf(cpf);
+        cadastroEntity.setEmail("test@test.com");
+        cadastroEntity.setIdade(20);
+        cadastroEntity.setPais("Brasil");
 
         return cadastroEntity;
     }

@@ -7,7 +7,7 @@ import br.com.challenge.adapter.out.mapper.CadastroMapper;
 import br.com.challenge.adapter.out.persistence.CadastroEntity;
 import br.com.challenge.adapter.out.persistence.CadastroRepository;
 import br.com.challenge.application.port.in.CadastroUseCase;
-import br.com.challenge.configuration.CustomBeanService;
+import br.com.challenge.configuration.annotation.CustomBeanService;
 import br.com.challenge.domain.model.Cadastro;
 import br.com.challenge.utils.ChallengeUtils;
 import org.springframework.dao.DataIntegrityViolationException;

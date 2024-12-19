@@ -20,6 +20,8 @@ public interface CadastroMapper {
     @Mapping(target = "id", ignore = true)
     CadastroEntity toCadastroEntity(Cadastro cadastro);
 
+    @Mapping(target = "dataCriacao", source = "dataCriacao", dateFormat = "dd/MM/yyyy HH:mm:ss")
+    @Mapping(target = "dataAtualizacao", source = "dataAtualizacao", dateFormat = "dd/MM/yyyy HH:mm:ss")
     CadastroResponse toCadastroResponse(Cadastro cadastro);
 
     CadastroMessageResponse toCadastroMessageResponse(String message);
