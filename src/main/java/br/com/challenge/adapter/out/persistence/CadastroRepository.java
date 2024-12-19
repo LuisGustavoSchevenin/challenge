@@ -7,4 +7,6 @@ import java.util.UUID;
 
 @Repository
 public interface CadastroRepository extends JpaRepository<CadastroEntity, UUID> {
+
+    CadastroEntity findByCadastroId(String cadastroId);
 }

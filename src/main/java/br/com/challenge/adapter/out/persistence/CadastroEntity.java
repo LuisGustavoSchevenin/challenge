@@ -53,6 +53,10 @@ public class CadastroEntity {
         this.cadastroId = cadastroId;
     }
 
+    public String getCadastroId() {
+        return cadastroId;
+    }
+
     public void setNome(String nome) {
         this.nome = nome;
     }

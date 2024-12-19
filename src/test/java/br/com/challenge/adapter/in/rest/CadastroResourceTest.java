@@ -2,6 +2,7 @@ package br.com.challenge.adapter.in.rest;
 
 import br.com.challenge.adapter.dto.CadastroMessageResponse;
 import br.com.challenge.adapter.dto.CadastroRequest;
+import br.com.challenge.adapter.dto.CadastroResponse;
 import br.com.challenge.adapter.dto.ErrorResponse;
 import br.com.challenge.utils.Fixture;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -25,7 +28,7 @@ public class CadastroResourceTest {
     private WebTestClient client;
 
     @Test
-    public void shouldCreateACadastro() {
+    public void shouldCreateCadastro() {
         CadastroRequest request = Fixture.buildCadastroRequest();
 
         CadastroMessageResponse response = client.post()
@@ -46,7 +49,7 @@ public class CadastroResourceTest {
     }
 
     @Test
-    public void shouldValidateBeanValidations() {
+    public void shouldValidateBeanValidations_onCreateCadastro_WhenCadastroRequestIsInvalid() {
         CadastroRequest request = new CadastroRequest("", "", "", "", 10, "");
 
         ErrorResponse errorResponse = client.post()
@@ -64,6 +67,53 @@ public class CadastroResourceTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(), errorResponse.getHttpCode());
         assertEquals("Bad Request", errorResponse.getDescription());
         assertEquals(7, errorResponse.getErrors().size());
+    }
+
+    /*@Test
+    public void shouldGetCadastroById() {
+        String cadastroId = "badaddbd-4e1e-4a20-acbb-823d0ac4fbe6";
+
+        CadastroResponse response = client.get()
+                .uri(String.format("/cadastro/%s", cadastroId))
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(CadastroResponse.class)
+                .returnResult()
+                .getResponseBody();
+    }*/
+
+    @Test
+    public void shouldReturnNoContent_onGetCadastroById_whenCadastroNotExist() {
+        String cadastroId = "badaddbd-4e1e-4a20-acbb-823d0ac4fbe6";
+
+        WebTestClient.BodyContentSpec response = client.get()
+                .uri(String.format("/cadastro/%s", cadastroId))
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isNoContent()
+                .expectBody();
+
+        assertNull(response.returnResult().getResponseBody());
+    }
+
+    @Test
+    public void shouldReturnBadRequest_onGetCadastroById_whenCadastroIdIsInvalid() {
+        ErrorResponse response = client.get()
+                .uri("/cadastro/1234-5689}")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .expectBody(ErrorResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getHttpCode());
+        assertEquals("The 'cadastroId' value is invalid", response.getDescription());
+        assertTrue(response.getErrors().isEmpty());
     }
 
 }

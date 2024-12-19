@@ -1,7 +1,7 @@
 package br.com.challenge.utils;
 
 import br.com.challenge.adapter.dto.CadastroRequest;
-import br.com.challenge.adapter.dto.CadastroDoneResponse;
+import br.com.challenge.adapter.dto.CadastroResponse;
 import br.com.challenge.adapter.out.persistence.CadastroEntity;
 import br.com.challenge.domain.model.Cadastro;
 
@@ -11,7 +11,21 @@ import java.util.UUID;
 public class Fixture {
 
     public static CadastroRequest buildCadastroRequest() {
-        return new CadastroRequest("Sarah", "Connor", "123.456.789-10", "test@test.com",20, "Brasil");
+        return new CadastroRequest("Sarah",
+                "Connor",
+                "123.456.789-10",
+                "test@test.com",
+                20,
+                "Brasil");
+    }
+
+    public static CadastroRequest buildCadastroRequest(final String cpf) {
+        return new CadastroRequest("Sarah",
+                "Connor",
+                cpf,
+                "test@test.com",
+                20,
+                "Brasil");
     }
 
     public static Cadastro buildCadastro() {
@@ -41,8 +55,8 @@ public class Fixture {
         return cadastroEntity;
     }
 
-    public static CadastroDoneResponse buildCadastroDoneResponse() {
-        return new CadastroDoneResponse("12345621",
+    public static CadastroResponse buildCadastroResponse() {
+        return new CadastroResponse("12345621",
                 "Sarah",
                 "Connor",
                 "12345678910",

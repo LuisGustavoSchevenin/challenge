@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @ControllerAdvice
@@ -22,8 +23,8 @@ public class CustomExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        LOG.error("An MethodArgumentNotValidException was thrown: {}", ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(final MethodArgumentNotValidException ex) {
+        LOG.error("The MethodArgumentNotValidException was thrown: {}", ex.getMessage());
 
         List<FieldError> fieldErrors = ex.getFieldErrors();
         List<Error> errors = new ArrayList<>();
@@ -38,6 +39,18 @@ public class CustomExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(ex.getStatusCode().value(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 errors);
+
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = InvalidUUIDException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidUUIDException(final InvalidUUIDException ex) {
+        LOG.error("The InvalidUUIDException was thrown: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                Collections.emptyList());
 
         return ResponseEntity.badRequest().body(errorResponse);
     }

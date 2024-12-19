@@ -2,6 +2,7 @@ package br.com.challenge.domain.usecase;
 
 import br.com.challenge.adapter.dto.CadastroMessageResponse;
 import br.com.challenge.adapter.dto.CadastroRequest;
+import br.com.challenge.adapter.dto.CadastroResponse;
 import br.com.challenge.adapter.out.mapper.CadastroMapper;
 import br.com.challenge.adapter.out.persistence.CadastroEntity;
 import br.com.challenge.adapter.out.persistence.CadastroRepository;
@@ -43,6 +44,20 @@ public class CadastroService implements CadastroUseCase {
             throw e;
         }
     }
+
+    @Override
+    public CadastroResponse getByCadastroId(final String cadastroId) {
+        CadastroResponse response = null;
+        CadastroEntity cadastroEntity = cadastroRepository.findByCadastroId(cadastroId);
+
+        if (cadastroEntity != null) {
+            Cadastro cadastro = cadastroMapper.toCadastro(cadastroEntity);
+            response = cadastroMapper.toCadastroResponse(cadastro);
+        }
+
+        return response;
+    }
+
 
     @Override
     public CadastroMessageResponse update(int cadastroKey, CadastroRequest cadastroRequest) {
