@@ -8,17 +8,19 @@ public class Cadastro {
     private String nome;
     private String sobrenome;
     private String cpf;
+    private String email;
     private int idade;
     private String pais;
     private String dataCriacao;
     private String dataAtualizacao;
 
 
-    protected Cadastro(String nome, String sobrenome, String cpf, int idade, String pais) {
+    protected Cadastro(String nome, String sobrenome, String cpf, String email, int idade, String pais) {
         this.cadastroId = UUID.nameUUIDFromBytes(cpf.getBytes()).toString();
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.cpf = cpf;
+        this.email = email;
         this.idade = idade;
         this.pais = pais;
     }
@@ -41,6 +43,10 @@ public class Cadastro {
 
     public String getCpf() {
         return cpf;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public int getIdade() {
@@ -72,6 +78,7 @@ public class Cadastro {
         private String nome;
         private String sobrenome;
         private String cpf;
+        private String email;
         private int idade;
         private String pais;
 
@@ -90,6 +97,11 @@ public class Cadastro {
             return this;
         }
 
+        public Builder email(final String email) {
+            this.email = email;
+            return this;
+        }
+
         public Builder idade(final int idade) {
             this.idade = idade;
             return this;
@@ -101,7 +113,7 @@ public class Cadastro {
         }
 
         public Cadastro build() {
-            return new Cadastro(nome, sobrenome, cpf, idade, pais);
+            return new Cadastro(nome, sobrenome, cpf, email, idade, pais);
         }
     }
 }

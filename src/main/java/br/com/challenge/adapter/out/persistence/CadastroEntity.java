@@ -27,6 +27,9 @@ public class CadastroEntity {
     @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
 
+    @Column(name = "email", nullable = false)
+    private String email;
+
     @Column(name = "idade", nullable = false)
     private int idade;
 
@@ -60,6 +63,10 @@ public class CadastroEntity {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setIdade(int idade) {

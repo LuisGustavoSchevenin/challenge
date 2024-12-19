@@ -1,11 +1,11 @@
 package br.com.challenge.application.port.in;
 
+import br.com.challenge.adapter.dto.CadastroMessageResponse;
 import br.com.challenge.adapter.dto.CadastroRequest;
-import br.com.challenge.adapter.dto.CadastroResponse;
 
 public interface CadastroUseCase {
 
-    CadastroResponse create(CadastroRequest cadastroRequest);
+    CadastroMessageResponse create(CadastroRequest cadastroRequest);
 
-    CadastroResponse update(int uuid, CadastroRequest cadastroRequest);
+    CadastroMessageResponse update(int uuid, CadastroRequest cadastroRequest);
 }

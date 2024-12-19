@@ -1,7 +1,7 @@
 package br.com.challenge.domain.usecase;
 
+import br.com.challenge.adapter.dto.CadastroMessageResponse;
 import br.com.challenge.adapter.dto.CadastroRequest;
-import br.com.challenge.adapter.dto.CadastroResponse;
 import br.com.challenge.adapter.out.mapper.CadastroMapper;
 import br.com.challenge.adapter.out.persistence.CadastroEntity;
 import br.com.challenge.adapter.out.persistence.CadastroRepository;
@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,17 +35,16 @@ class CadastroServiceTest {
         CadastroRequest cadastroRequest = Fixture.buildCadastroRequest();
         Cadastro cadastro = Fixture.buildCadastro();
         CadastroEntity cadastroEntity = Fixture.buildCadastroEntity();
-        CadastroResponse cadastroResponse = Fixture.buildCadastroResponse();
+        CadastroMessageResponse cadastroMessageResponse = new CadastroMessageResponse("OK");
 
         when(cadastroMapper.toCadastro(cadastroRequest)).thenReturn(cadastro);
         when(cadastroMapper.toCadastroEntity(cadastro)).thenReturn(cadastroEntity);
         when(cadastroRepository.save(cadastroEntity)).thenReturn(cadastroEntity);
-        when(cadastroMapper.toCadastroResponse(cadastro)).thenReturn(cadastroResponse);
+        when(cadastroMapper.toCadastroMessageResponse(anyString())).thenReturn(cadastroMessageResponse);
 
-        CadastroResponse response = cadastroService.create(cadastroRequest);
+        CadastroMessageResponse response = cadastroService.create(cadastroRequest);
 
-        assertFalse(response.dataCriacao().isBlank());
-        assertFalse(response.dataAtualizacao().isBlank());
+        assertEquals("OK", response.getMessage());
     }
 
     @Test
