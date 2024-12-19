@@ -3,6 +3,7 @@ package br.com.challenge.adapter.in.rest;
 import br.com.challenge.adapter.dto.CadastroMessageResponse;
 import br.com.challenge.adapter.dto.CadastroRequest;
 import br.com.challenge.adapter.dto.CadastroResponse;
+import br.com.challenge.adapter.dto.CadastrosResponse;
 import br.com.challenge.adapter.exception.InvalidUUIDException;
 import br.com.challenge.application.port.in.CadastroUseCase;
 import jakarta.validation.Valid;
@@ -24,7 +25,7 @@ import java.util.UUID;
  * Resource to manage the Cadastro data on the system.
  */
 @RestController
-@RequestMapping("/cadastro")
+@RequestMapping("/cadastros")
 public class CadastroResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(CadastroResource.class);
@@ -72,6 +73,15 @@ public class CadastroResource {
         }
 
         return ResponseEntity.status(status).body(response);
+    }
+
+    @GetMapping()
+    ResponseEntity<CadastrosResponse> getAll() {
+        LOG.info("Fetching all Cadastros");
+        CadastrosResponse response = cadastroUseCase.getAll();
+        LOG.info("{} Cadastros were found", response.cadastros().size());
+
+        return ResponseEntity.ok(response);
     }
 
     private void validateCadastroId(final String cadastroId) {

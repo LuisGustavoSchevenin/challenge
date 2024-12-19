@@ -3,6 +3,7 @@ package br.com.challenge.domain.usecase;
 import br.com.challenge.adapter.dto.CadastroMessageResponse;
 import br.com.challenge.adapter.dto.CadastroRequest;
 import br.com.challenge.adapter.dto.CadastroResponse;
+import br.com.challenge.adapter.dto.CadastrosResponse;
 import br.com.challenge.adapter.out.mapper.CadastroMapper;
 import br.com.challenge.adapter.out.persistence.CadastroEntity;
 import br.com.challenge.adapter.out.persistence.CadastroRepository;
@@ -12,6 +13,7 @@ import br.com.challenge.domain.model.Cadastro;
 import br.com.challenge.utils.ChallengeUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import java.util.List;
 import java.util.ResourceBundle;
 
 @CustomBeanService
@@ -58,6 +60,15 @@ public class CadastroService implements CadastroUseCase {
         return response;
     }
 
+    @Override
+    public CadastrosResponse getAll() {
+        List<CadastroResponse> cadastroResponses = cadastroRepository.findAll().stream()
+                .map(cadastroMapper::toCadastro)
+                .map(cadastroMapper::toCadastroResponse)
+                .toList();
+
+        return new CadastrosResponse(cadastroResponses);
+    }
 
     @Override
     public CadastroMessageResponse update(int cadastroKey, CadastroRequest cadastroRequest) {
