@@ -8,6 +8,7 @@ import br.com.challenge.adapter.exception.InvalidUUIDException;
 import br.com.challenge.adapter.validator.CreateCadastroGroup;
 import br.com.challenge.adapter.validator.UpdateCadastroGroup;
 import br.com.challenge.application.port.in.CreateCadastroUseCase;
+import br.com.challenge.application.port.in.DeleteCadastroUseCase;
 import br.com.challenge.application.port.in.RetrieveCadastroUseCae;
 import br.com.challenge.application.port.in.UpdateCadastroUseCase;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,12 +40,14 @@ public class CadastroResource {
     private final CreateCadastroUseCase createCadastroUseCase;
     private final RetrieveCadastroUseCae retrieveCadastroUseCase;
     private final UpdateCadastroUseCase updateCadastroUseCase;
+    private final DeleteCadastroUseCase deleteCadastroUseCase;
 
     public CadastroResource(CreateCadastroUseCase createCadastroUseCase, RetrieveCadastroUseCae retrieveCadastroUseCae,
-                            UpdateCadastroUseCase updateCadastroUseCase) {
+                            UpdateCadastroUseCase updateCadastroUseCase, DeleteCadastroUseCase deleteCadastroUseCase) {
         this.createCadastroUseCase = createCadastroUseCase;
         this.retrieveCadastroUseCase = retrieveCadastroUseCae;
         this.updateCadastroUseCase = updateCadastroUseCase;
+        this.deleteCadastroUseCase = deleteCadastroUseCase;
     }
 
     /**
@@ -119,6 +123,23 @@ public class CadastroResource {
 
         CadastroResponse response = updateCadastroUseCase.update(cadastroId, cadastroRequest);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * API to delete an existing Cadastro
+     *
+     * @param cadastroId unique identifier
+     * @return 204 if the entity was deleted or 404 if the entity not exists.
+     */
+    @DeleteMapping("/{cadastroId}")
+    public ResponseEntity<Void> delete(@PathVariable("cadastroId") final String cadastroId) {
+        validateCadastroId(cadastroId);
+
+        int status = deleteCadastroUseCase.delete(cadastroId)
+                ? HttpStatus.NO_CONTENT.value()
+                : HttpStatus.NOT_FOUND.value();
+
+        return ResponseEntity.status(status).build();
     }
 
 

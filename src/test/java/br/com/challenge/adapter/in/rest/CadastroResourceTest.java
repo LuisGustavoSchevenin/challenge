@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.Optional;
@@ -204,6 +205,37 @@ public class CadastroResourceTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getHttpCode());
         assertEquals("Bad Request", response.getDescription());
         assertEquals(4, response.getErrors().size());
+    }
+
+    @Test
+    public void shouldDeleteCadastro() {
+        CadastroEntity cadastroEntity = insertCadastro("123.321.111.10");
+        String cadastroId = cadastroEntity.getCadastroId();
+
+        EntityExchangeResult<byte[]> response = client.delete()
+                .uri(String.format("/%s/%s", BASE_PATH, cadastroId))
+                .exchange()
+                .expectStatus()
+                .isNoContent()
+                .expectBody()
+                .returnResult();
+
+        assertNull(response.getResponseBody());
+    }
+
+    @Test
+    public void shouldReturnNotFound_onDeleteCadastro_whenCadastroNotExists() {
+        String cadastroId = "5c092ab7-f1ef-4878-a1ab-ca9fb67f6ddd";
+
+        EntityExchangeResult<byte[]> response = client.delete()
+                .uri(String.format("/%s/%s", BASE_PATH, cadastroId))
+                .exchange()
+                .expectStatus()
+                .isNotFound()
+                .expectBody()
+                .returnResult();
+
+        assertNull(response.getResponseBody());
     }
 
     private CadastroEntity insertCadastro(final String cpf) {
