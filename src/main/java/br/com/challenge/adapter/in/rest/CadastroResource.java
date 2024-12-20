@@ -7,7 +7,9 @@ import br.com.challenge.adapter.dto.CadastrosResponse;
 import br.com.challenge.adapter.exception.InvalidUUIDException;
 import br.com.challenge.adapter.validator.CreateCadastroGroup;
 import br.com.challenge.adapter.validator.UpdateCadastroGroup;
-import br.com.challenge.application.port.in.CadastroUseCase;
+import br.com.challenge.application.port.in.CreateCadastroUseCase;
+import br.com.challenge.application.port.in.RetrieveCadastroUseCae;
+import br.com.challenge.application.port.in.UpdateCadastroUseCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,10 +35,15 @@ public class CadastroResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(CadastroResource.class);
 
-    private final CadastroUseCase cadastroUseCase;
+    private final CreateCadastroUseCase createCadastroUseCase;
+    private final RetrieveCadastroUseCae retrieveCadastroUseCase;
+    private final UpdateCadastroUseCase updateCadastroUseCase;
 
-    public CadastroResource(CadastroUseCase cadastroUseCase) {
-        this.cadastroUseCase = cadastroUseCase;
+    public CadastroResource(CreateCadastroUseCase createCadastroUseCase, RetrieveCadastroUseCae retrieveCadastroUseCae,
+                            UpdateCadastroUseCase updateCadastroUseCase) {
+        this.createCadastroUseCase = createCadastroUseCase;
+        this.retrieveCadastroUseCase = retrieveCadastroUseCae;
+        this.updateCadastroUseCase = updateCadastroUseCase;
     }
 
     /**
@@ -52,7 +59,7 @@ public class CadastroResource {
                                                           @Validated(CreateCadastroGroup.class) final CadastroRequest cadastroRequest) {
         LOG.info("The Cadastro from client name:{}, cpf:{} will be added on the system.",
                 cadastroRequest.getNome(), cadastroRequest.getCpf());
-        CadastroMessageResponse response = cadastroUseCase.create(cadastroRequest);
+        CadastroMessageResponse response = createCadastroUseCase.create(cadastroRequest);
         LOG.info("Cadastro submitted successfully from client nome:{}, cpf:{}",
                 cadastroRequest.getNome(), cadastroRequest.getCpf());
 
@@ -71,7 +78,7 @@ public class CadastroResource {
 
         int status = HttpStatus.OK.value();
         LOG.info("Fetching Cadastro data cadastroId:{}.", cadastroId);
-        CadastroResponse response = cadastroUseCase.getByCadastroId(cadastroId);
+        CadastroResponse response = retrieveCadastroUseCase.getByCadastroId(cadastroId);
 
         if (response == null) {
             LOG.info("Cadastro not found for cadastroId:{}", cadastroId);
@@ -89,12 +96,19 @@ public class CadastroResource {
     @GetMapping
     public ResponseEntity<CadastrosResponse> getAll() {
         LOG.info("Fetching all Cadastros");
-        CadastrosResponse response = cadastroUseCase.getAll();
+        CadastrosResponse response = retrieveCadastroUseCase.getAll();
         LOG.info("{} Cadastros were found", response.cadastros().size());
 
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * API to update Cadastro  data.
+     *
+     * @param cadastroId      unique identifier
+     * @param cadastroRequest request with custom data to be updated.
+     * @return {@link CadastroResponse} with updated data.
+     */
     @PatchMapping(value = "/{cadastroId}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -103,8 +117,7 @@ public class CadastroResource {
                                                    @Validated(UpdateCadastroGroup.class) final CadastroRequest cadastroRequest) {
         validateCadastroId(cadastroId);
 
-        CadastroResponse response = cadastroUseCase.update(cadastroId, cadastroRequest);
-
+        CadastroResponse response = updateCadastroUseCase.update(cadastroId, cadastroRequest);
         return ResponseEntity.ok(response);
     }
 
