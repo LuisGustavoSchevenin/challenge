@@ -17,9 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyString;
@@ -100,5 +102,60 @@ class CadastroServiceTest {
         assertEquals(2, response.cadastros().size());
         verify(cadastroMapper, times(2)).toCadastro(any(CadastroEntity.class));
         verify(cadastroMapper, times(2)).toCadastroResponse(any(Cadastro.class));
+    }
+
+    @Test
+    void shouldUpdateCadastro() {
+        CadastroRequest cadastroRequest = Fixture.buildCadastroRequest();
+        String cadastroId = UUID.randomUUID().toString();
+        CadastroEntity cadastroEntity = Fixture.buildCadastroEntity();
+        Cadastro cadastro = Fixture.buildCadastro();
+        CadastroResponse cadastroResponse = Fixture.buildCadastroResponse();
+
+        when(cadastroRepository.findByCadastroId(cadastroId)).thenReturn(cadastroEntity);
+        when(cadastroRepository.save(cadastroEntity)).thenReturn(cadastroEntity);
+        when(cadastroMapper.toCadastro(cadastroEntity)).thenReturn(cadastro);
+        when(cadastroMapper.toCadastroResponse(cadastro)).thenReturn(cadastroResponse);
+
+        CadastroResponse response = cadastroService.update(cadastroId, cadastroRequest);
+
+        assertNotNull(response);
+        verify(cadastroRepository).findByCadastroId(cadastroId);
+        verify(cadastroRepository).save(cadastroEntity);
+    }
+
+    @Test
+    void shouldNotUpdateCadastro_whenNotFoundCadastro() {
+        CadastroRequest cadastroRequest = Fixture.buildCadastroRequest();
+        String cadastroId = UUID.randomUUID().toString();
+
+        when(cadastroRepository.findByCadastroId(cadastroId)).thenReturn(null);
+
+        CadastroResponse response = cadastroService.update(cadastroId, cadastroRequest);
+
+        assertNull(response);
+        verify(cadastroRepository, never()).save(any(CadastroEntity.class));
+        verify(cadastroMapper, never()).toCadastro(any(CadastroEntity.class));
+        verify(cadastroMapper, never()).toCadastroResponse(any(Cadastro.class));
+    }
+
+    @Test
+    void shouldNotUpdateCadastro_whenFieldsAreNull() {
+        CadastroRequest cadastroRequest = new CadastroRequest(null, null, null, null);
+        String cadastroId = UUID.randomUUID().toString();
+        CadastroEntity cadastroEntity = Fixture.buildCadastroEntity();
+        Cadastro cadastro = Fixture.buildCadastro();
+        CadastroResponse cadastroResponse = Fixture.buildCadastroResponse();
+
+        when(cadastroRepository.findByCadastroId(cadastroId)).thenReturn(cadastroEntity);
+        when(cadastroRepository.save(cadastroEntity)).thenReturn(cadastroEntity);
+        when(cadastroMapper.toCadastro(cadastroEntity)).thenReturn(cadastro);
+        when(cadastroMapper.toCadastroResponse(cadastro)).thenReturn(cadastroResponse);
+
+        CadastroResponse response = cadastroService.update(cadastroId, cadastroRequest);
+
+        assertNotNull(response);
+        verify(cadastroRepository).findByCadastroId(cadastroId);
+        verify(cadastroRepository).save(cadastroEntity);
     }
 }

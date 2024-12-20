@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -40,7 +41,7 @@ public class CadastroResourceTest {
 
 
     @Test
-    public void shouldCreateCadastro() {
+    public void shouldCreate() {
         CadastroRequest request = Fixture.buildCadastroRequest();
 
         CadastroMessageResponse response = client.post()
@@ -61,7 +62,7 @@ public class CadastroResourceTest {
     }
 
     @Test
-    public void shouldValidateBeanValidations_onCreateCadastro_WhenCadastroRequestIsInvalid() {
+    public void shouldValidateBeanValidations_onCreateCadastro_WhenRequestIsInvalid() {
         CadastroRequest request = new CadastroRequest("", "", "", "", 10, "");
 
         ErrorResponse errorResponse = client.post()
@@ -154,6 +155,55 @@ public class CadastroResourceTest {
         Optional<CadastroResponse> result = response.cadastros().stream().findAny();
 
         assertNotNull(result.get());
+    }
+
+    @Test
+    public void shouldUpdateCadastro() {
+        CadastroEntity cadastroEntity = insertCadastro("123.321.443.10");
+        String cadastroId = cadastroEntity.getCadastroId();
+        CadastroRequest request = new CadastroRequest("Nome", "Sobrenome", "new@email.com", "País");
+
+        CadastroResponse response = client.patch()
+                .uri(String.format("/%s/%s", BASE_PATH, cadastroId))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(CadastroResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertEquals(cadastroEntity.getCadastroId(), response.cadastroId());
+        assertEquals(cadastroEntity.getIdade(), response.idade());
+        assertNotEquals(cadastroEntity.getNome(), response.nome());
+        assertNotEquals(cadastroEntity.getSobrenome(), response.sobrenome());
+        assertNotEquals(cadastroEntity.getEmail(), response.email());
+        assertNotEquals(cadastroEntity.getPais(), response.pais());
+    }
+
+    @Test
+    public void shouldReturnBadRequest_onUpdateCadastro_whenCadastroRequestHasInvalidData() {
+        CadastroEntity cadastroEntity = insertCadastro("123.321.567.10");
+        String cadastroId = cadastroEntity.getCadastroId();
+        CadastroRequest request = new CadastroRequest("", "", "", "");
+
+        ErrorResponse response = client.patch()
+                .uri(String.format("/%s/%s", BASE_PATH, cadastroId))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .expectBody(ErrorResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getHttpCode());
+        assertEquals("Bad Request", response.getDescription());
+        assertEquals(4, response.getErrors().size());
     }
 
     private CadastroEntity insertCadastro(final String cpf) {

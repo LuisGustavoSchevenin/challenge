@@ -13,6 +13,6 @@ public interface CadastroUseCase {
 
     CadastrosResponse getAll();
 
-    CadastroMessageResponse update(int uuid, CadastroRequest cadastroRequest);
+    CadastroResponse update(String cadastroId, CadastroRequest cadastroRequest);
 
 }

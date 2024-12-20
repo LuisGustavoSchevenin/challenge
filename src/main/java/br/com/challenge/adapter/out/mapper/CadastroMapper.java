@@ -12,7 +12,10 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CadastroMapper {
 
-    @Mapping(target = "cpf", expression = "java( br.com.challenge.utils.StringUtils.removeSpecialCharacters(cadastroRequest.cpf()))")
+    @Mapping(target = "cadastroId", ignore = true)
+    @Mapping(target = "dataCriacao", ignore = true)
+    @Mapping(target = "dataAtualizacao", ignore = true)
+    @Mapping(target = "cpf", expression = "java( br.com.challenge.utils.StringUtils.removeSpecialCharacters(cadastroRequest.getCpf()))")
     Cadastro toCadastro(CadastroRequest cadastroRequest);
 
     Cadastro toCadastro(CadastroEntity cadastroEntity);

@@ -28,7 +28,7 @@ public class CadastroService implements CadastroUseCase {
     }
 
     @Override
-    public CadastroMessageResponse create(CadastroRequest cadastroRequest) {
+    public CadastroMessageResponse create(final CadastroRequest cadastroRequest) {
         Cadastro cadastro = cadastroMapper.toCadastro(cadastroRequest);
         CadastroEntity cadastroEntity = cadastroMapper.toCadastroEntity(cadastro);
 
@@ -71,7 +71,34 @@ public class CadastroService implements CadastroUseCase {
     }
 
     @Override
-    public CadastroMessageResponse update(int cadastroKey, CadastroRequest cadastroRequest) {
-        return null;
+    public CadastroResponse update(final String cadastroId, final CadastroRequest cadastroUpdateRequest) {
+        CadastroResponse response = null;
+
+        CadastroEntity existingCadastro = cadastroRepository.findByCadastroId(cadastroId);
+
+        if (existingCadastro != null) {
+            if (cadastroUpdateRequest.getNome() != null) {
+                existingCadastro.setNome(cadastroUpdateRequest.getNome());
+            }
+
+            if (cadastroUpdateRequest.getSobrenome() != null) {
+                existingCadastro.setSobrenome(cadastroUpdateRequest.getSobrenome());
+            }
+
+            if (cadastroUpdateRequest.getEmail() != null) {
+                existingCadastro.setEmail(cadastroUpdateRequest.getEmail());
+            }
+
+            if (cadastroUpdateRequest.getPais() != null) {
+                existingCadastro.setPais(cadastroUpdateRequest.getPais());
+            }
+
+            CadastroEntity updatedCadastro = cadastroRepository.save(existingCadastro);
+            Cadastro cadastro = cadastroMapper.toCadastro(updatedCadastro);
+            response = cadastroMapper.toCadastroResponse(cadastro);
+        }
+
+        return response;
     }
+
 }
