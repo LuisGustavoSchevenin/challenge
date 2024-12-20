@@ -19,6 +19,7 @@ public class CustomBean {
         javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DATE_TIME_FORMATTER_PATTERN));
 
         return new ObjectMapper()
-                .registerModule(javaTimeModule);
+                .registerModule(javaTimeModule)
+                .findAndRegisterModules();
     }
 }

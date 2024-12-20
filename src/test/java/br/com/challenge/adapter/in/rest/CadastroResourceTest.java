@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -37,7 +38,7 @@ public class CadastroResourceTest {
     @Autowired
     private WebTestClient client;
 
-    @Autowired
+    @MockitoSpyBean
     private CadastroRepository cadastroRepository;
 
 
