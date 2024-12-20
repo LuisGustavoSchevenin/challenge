@@ -11,8 +11,6 @@ import br.com.challenge.domain.model.Cadastro;
 import br.com.challenge.utils.ChallengeUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.util.ResourceBundle;
-
 @CustomBeanService
 public class CreateCadastroService implements CreateCadastroUseCase {
 
@@ -32,8 +30,7 @@ public class CreateCadastroService implements CreateCadastroUseCase {
         try {
             cadastroRepository.save(cadastroEntity);
 
-            String message = ResourceBundle.getBundle("messages", ChallengeUtils.getCurrentLocale())
-                    .getString("received.data.message");
+            String message = ChallengeUtils.getMessage("received.data.message");
 
             return cadastroMapper.toCadastroMessageResponse(message);
         } catch (DataIntegrityViolationException e) { //TODO review ex

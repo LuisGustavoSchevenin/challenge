@@ -41,6 +41,9 @@ public class CadastroEntity {
     @Column(name = "pais", nullable = false)
     private String pais;
 
+    @Column(name = "notified", nullable = false)
+    private boolean notified;
+
     @CreationTimestamp
     @Column(name = "data_criacao", nullable = false)
     private LocalDateTime dataCriacao;
@@ -112,6 +115,14 @@ public class CadastroEntity {
 
     public void setPais(String pais) {
         this.pais = pais;
+    }
+
+    public boolean isNotified() {
+        return notified;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
     }
 
     public LocalDateTime getDataCriacao() {

@@ -14,6 +14,7 @@ public class Cadastro {
     private String email;
     private int idade;
     private String pais;
+    private boolean notified;
     private LocalDateTime dataCriacao;
     private LocalDateTime dataAtualizacao;
 
@@ -95,6 +96,14 @@ public class Cadastro {
 
     public void setPais(String pais) {
         this.pais = pais;
+    }
+
+    public boolean isNotified() {
+        return notified;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
     }
 
     public LocalDateTime getDataCriacao() {

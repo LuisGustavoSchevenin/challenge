@@ -13,6 +13,7 @@ import org.mapstruct.MappingConstants;
 public interface CadastroMapper {
 
     @Mapping(target = "cadastroId", ignore = true)
+    @Mapping(target = "notified", ignore = true)
     @Mapping(target = "dataCriacao", ignore = true)
     @Mapping(target = "dataAtualizacao", ignore = true)
     @Mapping(target = "cpf", expression = "java( br.com.challenge.utils.StringUtils.removeSpecialCharacters(cadastroRequest.getCpf()))")
