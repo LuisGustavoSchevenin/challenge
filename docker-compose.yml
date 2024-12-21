@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - SERVICES=${SERVICES-apigateway}
+      - DEBUG=${DEBUG:-1}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+
+  #
+  #  postgres:
+  #    image: amd64/postgres:16-alpine3.21
+  #    platform: "linux/amd64"
+  #    restart: always
+  #    # set shared memory limit when using docker-compose
+  #    shm_size: 128mb
+  #    # or set shared memory limit when deploy via swarm stack
+  #    #volumes:
+  #    #  - type: tmpfs
+  #    #    target: /dev/shm
+  #    #    tmpfs:
+  #    #      size: 134217728 # 128*2^20 bytes = 128Mb
+  #   environment:
+  #     POSTGRES_PASSWORD: example
+  #
+  # #adminer:
+  #  image: adminer
+  #  restart: always
+  #  ports:
+  #    - 8080:8080
