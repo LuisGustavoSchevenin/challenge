@@ -11,6 +11,8 @@ import br.com.challenge.application.port.in.CreateCadastroUseCase;
 import br.com.challenge.application.port.in.DeleteCadastroUseCase;
 import br.com.challenge.application.port.in.RetrieveCadastroUseCae;
 import br.com.challenge.application.port.in.UpdateCadastroUseCase;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -33,7 +36,7 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/cadastros")
-public class CadastroResource {
+public class CadastroResource implements CadastroResourceI {
 
     private static final Logger LOG = LoggerFactory.getLogger(CadastroResource.class);
 
@@ -51,7 +54,7 @@ public class CadastroResource {
     }
 
     /**
-     * API to submit a Cadastro data.
+     * API to submit a Cadastro.
      *
      * @param cadastroRequest containing the user data.
      * @return {@link CadastroMessageResponse} with a message about the operation status.
@@ -107,7 +110,7 @@ public class CadastroResource {
     }
 
     /**
-     * API to update Cadastro  data.
+     * API to update an existing Cadastro.
      *
      * @param cadastroId      unique identifier
      * @param cadastroRequest request with custom data to be updated.
@@ -126,7 +129,7 @@ public class CadastroResource {
     }
 
     /**
-     * API to delete an existing Cadastro
+     * API to delete an existing Cadastro.
      *
      * @param cadastroId unique identifier
      * @return 204 if the entity was deleted or 404 if the entity not exists.

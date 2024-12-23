@@ -35,6 +35,9 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.6.3")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
+    // DOCUMENTATION
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
+
     // LOG & TRACING
     implementation("org.apache.logging.log4j:log4j-core:2.24.2")
     implementation("io.micrometer:micrometer-tracing")
