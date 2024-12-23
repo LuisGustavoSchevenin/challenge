@@ -8,17 +8,23 @@ import br.com.challenge.adapter.dto.ErrorResponse;
 import br.com.challenge.adapter.out.persistence.CadastroEntity;
 import br.com.challenge.adapter.out.persistence.CadastroRepository;
 import br.com.challenge.utils.Fixture;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.netty.http.client.HttpClient;
 
+import javax.net.ssl.SSLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -35,8 +41,14 @@ public class CadastroResourceTest {
 
     private static final String BASE_PATH = "cadastros";
 
-    @Autowired
     private WebTestClient client;
+
+    @BeforeEach
+    void setUp() throws SSLException {
+        SslContext sslContext = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+        HttpClient httpClient = HttpClient.create().secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
+        client = WebTestClient.bindToServer(new ReactorClientHttpConnector(httpClient)).baseUrl("https://localhost:8080").build();
+    }
 
     @MockitoSpyBean
     private CadastroRepository cadastroRepository;
@@ -61,6 +73,43 @@ public class CadastroResourceTest {
         String expectedMessage = ResourceBundle.getBundle("messages", LocaleContextHolder.getLocale()).getString("received.data.message");
 
         assertEquals(expectedMessage, response.getMessage());
+    }
+
+    @Test
+    public void shouldReturnBadRequest_onCreateCadastro_whenUseSameCpfTwice() {
+        CadastroRequest request_1 = Fixture.buildCadastroRequest("123.123.123.12");
+        CadastroRequest request_2 = Fixture.buildCadastroRequest("123.123.123.12");
+
+        CadastroMessageResponse response_1 = client.post()
+                .uri(String.format("/%s/%s", BASE_PATH, "adicionar"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(request_1)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(CadastroMessageResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        String expectedMessage = ResourceBundle.getBundle("messages",
+                LocaleContextHolder.getLocale()).getString("received.data.message");
+
+        assertEquals(expectedMessage, response_1.getMessage());
+
+        ErrorResponse response_2 = client.post()
+                .uri(String.format("/%s/%s", BASE_PATH, "adicionar"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(request_2)
+                .exchange()
+                .expectStatus()
+                .isBadRequest()
+                .expectBody(ErrorResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertEquals("A Cadastro for this cpf already exists.", response_2.getDescription());
     }
 
     @Test
@@ -183,6 +232,26 @@ public class CadastroResourceTest {
         assertNotEquals(cadastroEntity.getSobrenome(), response.sobrenome());
         assertNotEquals(cadastroEntity.getEmail(), response.email());
         assertNotEquals(cadastroEntity.getPais(), response.pais());
+    }
+
+    @Test
+    public void shouldReturnNotFound_onUpdateCadastro_whenCadastroNotExist() {
+        String cadastroId = "5c092ab7-f1ef-4878-a1ab-ca9fb67f6ddd";
+        CadastroRequest request = new CadastroRequest("Nome", "Sobrenome", "new@email.com", "País");
+
+        ErrorResponse response = client.patch()
+                .uri(String.format("/%s/%s", BASE_PATH, cadastroId))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isNotFound()
+                .expectBody(ErrorResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertEquals("The Cadastro for this id not exists", response.getDescription());
     }
 
     @Test

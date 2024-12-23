@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 
 public class CadastroRequest {
@@ -21,6 +22,7 @@ public class CadastroRequest {
 
     @NotBlank(message = "{validation.cpf.blank}", groups = CreateCadastroGroup.class)
     @Size(min = 11, max = 14, message = "{validation.cpf.size}", groups = CreateCadastroGroup.class)
+    @Null(message = "{validation.cpf.null}", groups = UpdateCadastroGroup.class)
     private String cpf;
 
     @NotBlank(message = "{validation.email.blank}", groups = CreateCadastroGroup.class)
@@ -30,7 +32,8 @@ public class CadastroRequest {
 
     @Min(value = 18, message = "{validation.idade.min}", groups = CreateCadastroGroup.class)
     @Max(value = 120, message = "{validation.idade.max}", groups = CreateCadastroGroup.class)
-    private int idade;
+    @Null(message = "{validation.idade.null}", groups = UpdateCadastroGroup.class)
+    private Integer idade;
 
     @NotBlank(message = "{validation.idade.blank}", groups = CreateCadastroGroup.class)
     @NullOrNotBlank(message = "{validation.sobrenome.blank}", groups = UpdateCadastroGroup.class)
@@ -87,11 +90,11 @@ public class CadastroRequest {
         this.email = email;
     }
 
-    public int getIdade() {
+    public Integer getIdade() {
         return idade;
     }
 
-    public void setIdade(int idade) {
+    public void setIdade(Integer idade) {
         this.idade = idade;
     }
 

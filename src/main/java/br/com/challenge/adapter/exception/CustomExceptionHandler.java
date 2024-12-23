@@ -67,6 +67,18 @@ public class CustomExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(value = CadastroNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCadastroNotFoundException(final CadastroNotFoundException ex) {
+        LOG.error("The CadastroNotFoundException was thrown: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                Collections.emptyList());
+
+        return ResponseEntity.status(404).body(errorResponse);
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<Void> handleInternalServerException(final Exception ex) {

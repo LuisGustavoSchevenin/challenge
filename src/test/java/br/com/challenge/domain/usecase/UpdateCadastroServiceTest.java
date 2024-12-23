@@ -2,6 +2,7 @@ package br.com.challenge.domain.usecase;
 
 import br.com.challenge.adapter.dto.CadastroRequest;
 import br.com.challenge.adapter.dto.CadastroResponse;
+import br.com.challenge.adapter.exception.CadastroNotFoundException;
 import br.com.challenge.adapter.out.mapper.CadastroMapper;
 import br.com.challenge.adapter.out.persistence.CadastroEntity;
 import br.com.challenge.adapter.out.persistence.CadastroRepository;
@@ -16,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -62,9 +63,8 @@ class UpdateCadastroServiceTest {
 
         when(cadastroRepository.findByCadastroId(cadastroId)).thenReturn(null);
 
-        CadastroResponse response = updateCadastroService.update(cadastroId, cadastroRequest);
+        assertThrows(CadastroNotFoundException.class, () -> updateCadastroService.update(cadastroId, cadastroRequest));
 
-        assertNull(response);
         verify(cadastroRepository, never()).save(any(CadastroEntity.class));
         verify(cadastroMapper, never()).toCadastro(any(CadastroEntity.class));
         verify(cadastroMapper, never()).toCadastroResponse(any(Cadastro.class));

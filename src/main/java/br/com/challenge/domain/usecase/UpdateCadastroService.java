@@ -2,6 +2,7 @@ package br.com.challenge.domain.usecase;
 
 import br.com.challenge.adapter.dto.CadastroRequest;
 import br.com.challenge.adapter.dto.CadastroResponse;
+import br.com.challenge.adapter.exception.CadastroNotFoundException;
 import br.com.challenge.adapter.out.mapper.CadastroMapper;
 import br.com.challenge.adapter.out.persistence.CadastroEntity;
 import br.com.challenge.adapter.out.persistence.CadastroRepository;
@@ -22,7 +23,7 @@ public class UpdateCadastroService implements UpdateCadastroUseCase {
 
     @Override
     public CadastroResponse update(final String cadastroId, final CadastroRequest cadastroUpdateRequest) {
-        CadastroResponse response = null;
+        CadastroResponse response;
 
         CadastroEntity existingCadastro = cadastroRepository.findByCadastroId(cadastroId);
 
@@ -46,6 +47,8 @@ public class UpdateCadastroService implements UpdateCadastroUseCase {
             CadastroEntity updatedCadastro = cadastroRepository.save(existingCadastro);
             Cadastro cadastro = cadastroMapper.toCadastro(updatedCadastro);
             response = cadastroMapper.toCadastroResponse(cadastro);
+        } else {
+            throw new CadastroNotFoundException("The Cadastro for this id not exists");
         }
 
         return response;
