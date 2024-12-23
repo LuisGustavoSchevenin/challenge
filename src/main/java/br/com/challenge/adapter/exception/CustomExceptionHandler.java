@@ -54,4 +54,24 @@ public class CustomExceptionHandler {
 
         return ResponseEntity.badRequest().body(errorResponse);
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = CadastroAlreadyExistException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidUUIDException(final CadastroAlreadyExistException ex) {
+        LOG.error("The CadastroAlreadyExistException was thrown: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                Collections.emptyList());
+
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<Void> handleInternalServerException(final Exception ex) {
+        LOG.error("An unexpected Exception was thrown: {}", ex.getMessage());
+
+        return ResponseEntity.internalServerError().build();
+    }
 }

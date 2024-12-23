@@ -2,6 +2,7 @@ package br.com.challenge.domain.usecase;
 
 import br.com.challenge.adapter.dto.CadastroMessageResponse;
 import br.com.challenge.adapter.dto.CadastroRequest;
+import br.com.challenge.adapter.exception.CadastroAlreadyExistException;
 import br.com.challenge.adapter.out.mapper.CadastroMapper;
 import br.com.challenge.adapter.out.persistence.CadastroEntity;
 import br.com.challenge.adapter.out.persistence.CadastroRepository;
@@ -33,11 +34,8 @@ public class CreateCadastroService implements CreateCadastroUseCase {
             String message = ChallengeUtils.getMessage("received.data.message");
 
             return cadastroMapper.toCadastroMessageResponse(message);
-        } catch (DataIntegrityViolationException e) { //TODO review ex
-            throw e;
-        } catch (Exception e) {
-            System.out.printf("Erro ao realizar o cadastro: %s\n", e); //TODO review and remove sysout
-            throw e;
+        } catch (DataIntegrityViolationException e) {
+            throw new CadastroAlreadyExistException("A Cadastro for this cpf already exists.");
         }
     }
 
