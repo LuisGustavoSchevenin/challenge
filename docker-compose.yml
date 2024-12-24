@@ -1,38 +1,59 @@
-version: '3.9'
+version: '3.8'
 
 services:
+  challenge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8443:8443"
+    environment:
+      - CERT_PATH=/usr/local/share/ca-certificates/keystore.p12
+    volumes:
+      - ./data/cert/keystore.p12:/usr/local/share/ca-certificates/keystore.p12
+    networks:
+      - challenge-network
+
   localstack:
-    image: localstack/localstack
+    image: localstack/localstack:latest
     ports:
       - "4566:4566"
       - "4510-4559:4510-4559"
     environment:
-      - SERVICES=${SERVICES-apigateway}
-      - DEBUG=${DEBUG:-1}
-      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DEBUG=1
+      - SERVICES=apigateway
+      - DOCKER_SOCK=unix:///var/run/docker.sock
+      - LOCALSTACK_HOST=localhost
+      - LOCALSTACK_API_GATEWAY_INTEGRATION=https://host.docker.internal:8443 # For macOS/Windows
     volumes:
-      - "/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - challenge-network
+    #network_mode: host # setup to be able to call your localhost on linux OS
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - "./data/prometheus/certs:/etc/prometheus/certs"
+      - "./data/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+    networks:
+      - challenge-network
+
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - challenge-network
 
 
-  #
-  #  postgres:
-  #    image: amd64/postgres:16-alpine3.21
-  #    platform: "linux/amd64"
-  #    restart: always
-  #    # set shared memory limit when using docker-compose
-  #    shm_size: 128mb
-  #    # or set shared memory limit when deploy via swarm stack
-  #    #volumes:
-  #    #  - type: tmpfs
-  #    #    target: /dev/shm
-  #    #    tmpfs:
-  #    #      size: 134217728 # 128*2^20 bytes = 128Mb
-  #   environment:
-  #     POSTGRES_PASSWORD: example
-  #
-  # #adminer:
-  #  image: adminer
-  #  restart: always
-  #  ports:
-  #    - 8080:8080
+networks:
+  challenge-network:
+    driver: bridge

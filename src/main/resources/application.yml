@@ -5,6 +5,8 @@ spring:
   h2:
     console:
       enabled: true
+      settings:
+        web-allow-others: true
   datasource:
     url: jdbc:h2:mem:mydb
     hikari:
@@ -30,9 +32,10 @@ server:
   ssl:
     enabled: true
     key-store-type: PKCS12
-    key-store: ${CERT_PATH:classpath:/cert/keystore.p12\}
+    key-store: ${CERT_PATH:data/certs/keystore.p12}
     key-store-password: challenge
     enabled-protocols: TLSv1.2
+  port: 8443
 
 # Scheduler Properties
 cron:
@@ -44,6 +47,17 @@ notification:
   email:
     from: REPLACE
 
+# Observability
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+# Documentation
 springdoc:
   show-actuator: true
   default-consumes-media-type: application/json

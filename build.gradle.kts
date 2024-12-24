@@ -43,6 +43,9 @@ dependencies {
     implementation("io.micrometer:micrometer-tracing")
     implementation("io.micrometer:micrometer-tracing-bridge-otel")
 
+    // METRICS
+    implementation("io.micrometer:micrometer-registry-prometheus")
+
     // TEST
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
