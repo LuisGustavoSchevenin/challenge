@@ -47,7 +47,7 @@ public class CadastroResourceTest {
     void setUp() throws SSLException {
         SslContext sslContext = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
         HttpClient httpClient = HttpClient.create().secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
-        client = WebTestClient.bindToServer(new ReactorClientHttpConnector(httpClient)).baseUrl("https://localhost:8080").build();
+        client = WebTestClient.bindToServer(new ReactorClientHttpConnector(httpClient)).baseUrl("https://localhost:8443").build();
     }
 
     @MockitoSpyBean

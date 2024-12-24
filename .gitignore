@@ -38,3 +38,10 @@ out/
 
 ### Logs ###
 /logs/*
+
+### Elastic
+data/elasticsearch/indices/*
+data/elasticsearch/_state/*
+data/elasticsearch/snapshot_cache/*
+data/elasticsearch/nodes
+data/elasticsearch/node.lock
