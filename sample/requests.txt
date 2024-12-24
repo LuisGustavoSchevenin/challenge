@@ -1,0 +1,36 @@
+
+### ADICIONAR Cadastro ###
+curl --location 'https://localhost:8443/cadastros/adicionar' \
+--header 'Content-Type: application/json' \
+--header 'Accept-Language: pt-BR' \
+--data-raw '{
+    "nome": "Sarah",
+    "sobrenome": "Connor",
+    "cpf": "123.456.879-10",
+    "email": "test@test.com",
+    "idade": "20",
+    "pais": "Brasil"
+}'
+
+
+### GET Cadastro By cadastro id ###
+curl --location 'https://localhost:8443/cadastros/d63c1888-5f83-3fba-9ce2-2df560bdbe1e'
+
+
+### GET ALL Cadastros ###
+curl --location 'https://localhost:8443/cadastros'
+
+
+### ATUALIZAR Cadastro By cadastro id ###
+curl --location --request PATCH 'https://localhost:8443/cadastros/d63c1888-5f83-3fba-9ce2-2df560bdbe1e' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "nome": "Sarah",
+    "sobrenome": "Connor",
+    "email": "rareh81355@kelenson.com",
+    "pais": "Brasil"
+}'
+
+
+### DELETAR Cadastro By cadastro id ###
+curl --location --request DELETE 'https://localhost:8443/cadastros/d63c1888-5f83-3fba-9ce2-2df560bdbe1e'
