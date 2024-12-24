@@ -8,6 +8,8 @@ import br.com.challenge.adapter.out.persistence.CadastroRepository;
 import br.com.challenge.application.port.out.EmailUseCase;
 import br.com.challenge.domain.model.Cadastro;
 import br.com.challenge.utils.ChallengeUtils;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,13 +26,15 @@ public class NotifyScheduler {
     private final CadastroMapper cadastroMapper;
     private final EmailMapper emailMapper;
     private final EmailUseCase emailUseCase;
+    private final MeterRegistry meterRegistry;
 
     public NotifyScheduler(CadastroRepository cadastroRepository, CadastroMapper cadastroMapper,
-                           EmailMapper emailMapper, EmailUseCase emailUseCase) {
+                           EmailMapper emailMapper, EmailUseCase emailUseCase, MeterRegistry meterRegistry) {
         this.cadastroRepository = cadastroRepository;
         this.cadastroMapper = cadastroMapper;
         this.emailMapper = emailMapper;
         this.emailUseCase = emailUseCase;
+        this.meterRegistry = meterRegistry;
     }
 
     @Scheduled(cron = "${cron.notification.time}")
@@ -45,6 +49,11 @@ public class NotifyScheduler {
             updateCadastro(cadastroEntity);
             LOG.info("Notification sent successfully to cadastroId:{}, email:{}", cadastro.getCadastroId(),
                     cadastro.getEmail());
+
+            Counter counter = Counter.builder("notifications_counter")
+                    .description("Amount of notifications already sent")
+                    .register(meterRegistry);
+            counter.increment();
         });
     }
 

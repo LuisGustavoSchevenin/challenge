@@ -6,7 +6,4 @@ public class StringUtils {
         return content.replaceAll("[^a-zA-Z0-9]", "");
     }
 
-    public static String dataMask(final String string) {
-        return string; //TODO implement
-    }
 }

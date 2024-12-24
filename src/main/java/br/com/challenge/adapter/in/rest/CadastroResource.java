@@ -44,13 +44,16 @@ public class CadastroResource implements CadastroResourceI {
     private final RetrieveCadastroUseCae retrieveCadastroUseCase;
     private final UpdateCadastroUseCase updateCadastroUseCase;
     private final DeleteCadastroUseCase deleteCadastroUseCase;
+    private final MeterRegistry meterRegistry;
 
     public CadastroResource(CreateCadastroUseCase createCadastroUseCase, RetrieveCadastroUseCae retrieveCadastroUseCae,
-                            UpdateCadastroUseCase updateCadastroUseCase, DeleteCadastroUseCase deleteCadastroUseCase) {
+                            UpdateCadastroUseCase updateCadastroUseCase, DeleteCadastroUseCase deleteCadastroUseCase,
+                            MeterRegistry meterRegistry) {
         this.createCadastroUseCase = createCadastroUseCase;
         this.retrieveCadastroUseCase = retrieveCadastroUseCae;
         this.updateCadastroUseCase = updateCadastroUseCase;
         this.deleteCadastroUseCase = deleteCadastroUseCase;
+        this.meterRegistry = meterRegistry;
     }
 
     /**
@@ -69,6 +72,11 @@ public class CadastroResource implements CadastroResourceI {
         CadastroMessageResponse response = createCadastroUseCase.create(cadastroRequest);
         LOG.info("Cadastro submitted successfully from client nome:{}, cpf:{}",
                 cadastroRequest.getNome(), cadastroRequest.getCpf());
+
+        Counter counter = Counter.builder("cadastro_counter")
+                .description("Amount of cadastros created")
+                .register(meterRegistry);
+        counter.increment();
 
         return ResponseEntity.ok(response);
     }
@@ -106,6 +114,11 @@ public class CadastroResource implements CadastroResourceI {
         CadastrosResponse response = retrieveCadastroUseCase.getAll();
         LOG.info("{} Cadastros were found", response.cadastros().size());
 
+        Counter counter = Counter.builder("get_all_cadastro_counter")
+                .description("Amount of invocations to get all cadastros")
+                .register(meterRegistry);
+        counter.increment();
+
         return ResponseEntity.ok(response);
     }
 
@@ -125,6 +138,12 @@ public class CadastroResource implements CadastroResourceI {
         validateCadastroId(cadastroId);
 
         CadastroResponse response = updateCadastroUseCase.update(cadastroId, cadastroRequest);
+
+        Counter counter = Counter.builder("patch_cadastro_counter")
+                .description("Amount of cadastros that was updated")
+                .register(meterRegistry);
+        counter.increment();
+
         return ResponseEntity.ok(response);
     }
 

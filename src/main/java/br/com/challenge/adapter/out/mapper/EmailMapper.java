@@ -1,6 +1,7 @@
 package br.com.challenge.adapter.out.mapper;
 
 import br.com.challenge.adapter.dto.EmailNotification;
+import br.com.challenge.adapter.exception.JsonParseEmailException;
 import br.com.challenge.domain.model.Cadastro;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +21,7 @@ public class EmailMapper {
             String body = objectMapper.writeValueAsString(cadastro);
             return new EmailNotification(subject, message, body);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e); //TODO improve
+            throw new JsonParseEmailException("Error trying to parse the email content");
         }
     }
 }

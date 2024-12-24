@@ -53,6 +53,35 @@ services:
     networks:
       - challenge-network
 
+  elasticsearch:
+      image: elasticsearch:8.17.0
+      container_name: elasticsearch
+      ports:
+        - "9200:9200"
+        - "9300:9300"
+      environment:
+        - discovery.type=single-node
+        - xpack.security.enabled=false
+        - ELASTICSEARCH_USERNAME=elastic
+        - ELASTIC_PASSWORD=admin
+        - ES_JAVA_OPTS=-XX:UseSVE=0
+        - CLI_JAVA_OPTS=-XX:UseSVE=0
+      volumes:
+        - ./data/elasticsearch:/usr/share/elasticsearch/data
+      networks:
+        - challenge-network
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.16.2
+    volumes:
+      - ./logs:/logs  # Mount log file to Filebeat container
+      - ./data/elasticsearch/filebeat.yml:/usr/share/filebeat/filebeat.yml  # Filebeat config
+    environment:
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - challenge-network
 
 networks:
   challenge-network:
