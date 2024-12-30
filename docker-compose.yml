@@ -5,17 +5,19 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: challenge-api
     ports:
       - "8443:8443"
     environment:
       - CERT_PATH=/usr/local/share/ca-certificates/keystore.p12
     volumes:
-      - ./data/cert/keystore.p12:/usr/local/share/ca-certificates/keystore.p12
+      - ./data/certs/keystore.p12:/usr/local/share/ca-certificates/keystore.p12
     networks:
       - challenge-network
 
   localstack:
     image: localstack/localstack:latest
+    container_name: localstack-challenge
     ports:
       - "4566:4566"
       - "4510-4559:4510-4559"
@@ -24,7 +26,7 @@ services:
       - SERVICES=apigateway
       - DOCKER_SOCK=unix:///var/run/docker.sock
       - LOCALSTACK_HOST=localhost
-      - LOCALSTACK_API_GATEWAY_INTEGRATION=https://host.docker.internal:8443 # For macOS/Windows
+      - LOCALSTACK_API_GATEWAY_INTEGRATION=https://challenge-api:8443
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
@@ -73,6 +75,7 @@ services:
 
   filebeat:
     image: docker.elastic.co/beats/filebeat:8.16.2
+    container_name: filebeat-challenge
     volumes:
       - ./logs:/logs  # Mount log file to Filebeat container
       - ./data/elasticsearch/filebeat.yml:/usr/share/filebeat/filebeat.yml  # Filebeat config
@@ -85,4 +88,5 @@ services:
 
 networks:
   challenge-network:
+    name: challenge-network
     driver: bridge
