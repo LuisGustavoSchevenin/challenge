@@ -112,7 +112,7 @@ resource "aws_api_gateway_integration" "post_cadastro" {
   resource_id             = aws_api_gateway_resource.adicionar.id
   http_method             = aws_api_gateway_method.post_cadastro.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://host.docker.internal:8443/cadastros/adicionar"
+  uri                     = "https://challenge-api:8443/cadastros/adicionar"
   integration_http_method = "POST"
   depends_on = [
     aws_api_gateway_method.post_cadastro
@@ -124,7 +124,7 @@ resource "aws_api_gateway_integration" "get_cadastro" {
   resource_id             = aws_api_gateway_resource.cadastro_id.id
   http_method             = aws_api_gateway_method.get_cadastro.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://host.docker.internal:8443/cadastros/{cadastroId}"
+  uri                     = "https://challenge-api:8443/cadastros/{cadastroId}"
   integration_http_method = "GET"
   request_parameters = {
     "integration.request.path.cadastroId" = "method.request.path.cadastroId"
@@ -139,7 +139,7 @@ resource "aws_api_gateway_integration" "get_cadastros" {
   resource_id             = aws_api_gateway_resource.cadastros.id
   http_method             = aws_api_gateway_method.get_cadastros.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://host.docker.internal:8443/cadastros"
+  uri                     = "https://challenge-api:8443/cadastros"
   integration_http_method = "GET"
   depends_on = [
     aws_api_gateway_method.get_cadastros
@@ -151,7 +151,7 @@ resource "aws_api_gateway_integration" "patch_cadastro" {
   resource_id             = aws_api_gateway_resource.cadastro_id.id
   http_method             = aws_api_gateway_method.patch_cadastro.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://host.docker.internal:8443/cadastros/{cadastroId}"
+  uri                     = "https://challenge-api:8443/cadastros/{cadastroId}"
   integration_http_method = "PATCH"
   request_parameters = {
     "integration.request.path.cadastroId" = "method.request.path.cadastroId"
@@ -166,7 +166,7 @@ resource "aws_api_gateway_integration" "delete_cadastro" {
   resource_id             = aws_api_gateway_resource.cadastro_id.id
   http_method             = aws_api_gateway_method.delete_cadastro.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "https://host.docker.internal:8443/cadastros/{cadastroId}"
+  uri                     = "https://challenge-api:8443/cadastros/{cadastroId}"
   integration_http_method = "DELETE"
   request_parameters = {
     "integration.request.path.cadastroId" = "method.request.path.cadastroId"
