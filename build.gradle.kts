@@ -46,6 +46,8 @@ dependencies {
     // METRICS
     implementation("io.micrometer:micrometer-registry-prometheus")
 
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.2")
+
     // TEST
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")

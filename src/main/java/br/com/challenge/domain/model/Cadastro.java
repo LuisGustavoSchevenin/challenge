@@ -1,6 +1,6 @@
 package br.com.challenge.domain.model;
 
-import br.com.challenge.configuration.annotation.Default;
+import br.com.challenge.infrastructure.configuration.annotation.Default;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

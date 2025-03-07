@@ -1,11 +1,11 @@
 package br.com.challenge.domain.usecase;
 
-import br.com.challenge.adapter.dto.CadastroMessageResponse;
-import br.com.challenge.adapter.dto.CadastroRequest;
-import br.com.challenge.adapter.exception.CadastroAlreadyExistException;
-import br.com.challenge.adapter.out.mapper.CadastroMapper;
-import br.com.challenge.adapter.out.persistence.CadastroEntity;
-import br.com.challenge.adapter.out.persistence.CadastroRepository;
+import br.com.challenge.infrastructure.adapter.in.web.dto.CadastroMessageResponse;
+import br.com.challenge.infrastructure.adapter.in.web.dto.CadastroRequest;
+import br.com.challenge.infrastructure.adapter.exception.CadastroAlreadyExistException;
+import br.com.challenge.infrastructure.adapter.persistence.mapper.CadastroMapper;
+import br.com.challenge.infrastructure.adapter.persistence.entity.CadastroEntity;
+import br.com.challenge.infrastructure.adapter.out.repository.CadastroRepository;
 import br.com.challenge.domain.model.Cadastro;
 import br.com.challenge.utils.Fixture;
 import org.junit.jupiter.api.Test;

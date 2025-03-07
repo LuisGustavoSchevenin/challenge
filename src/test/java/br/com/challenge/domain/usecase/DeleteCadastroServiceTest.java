@@ -1,7 +1,7 @@
 package br.com.challenge.domain.usecase;
 
-import br.com.challenge.adapter.out.persistence.CadastroEntity;
-import br.com.challenge.adapter.out.persistence.CadastroRepository;
+import br.com.challenge.infrastructure.adapter.persistence.entity.CadastroEntity;
+import br.com.challenge.infrastructure.adapter.out.repository.CadastroRepository;
 import br.com.challenge.utils.Fixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

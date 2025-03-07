@@ -1,13 +1,13 @@
 package br.com.challenge.domain.usecase;
 
-import br.com.challenge.adapter.dto.CadastroRequest;
-import br.com.challenge.adapter.dto.CadastroResponse;
-import br.com.challenge.adapter.exception.CadastroNotFoundException;
-import br.com.challenge.adapter.out.mapper.CadastroMapper;
-import br.com.challenge.adapter.out.persistence.CadastroEntity;
-import br.com.challenge.adapter.out.persistence.CadastroRepository;
+import br.com.challenge.infrastructure.adapter.in.web.dto.CadastroRequest;
+import br.com.challenge.infrastructure.adapter.in.web.dto.CadastroResponse;
+import br.com.challenge.infrastructure.adapter.exception.CadastroNotFoundException;
+import br.com.challenge.infrastructure.adapter.persistence.mapper.CadastroMapper;
+import br.com.challenge.infrastructure.adapter.persistence.entity.CadastroEntity;
+import br.com.challenge.infrastructure.adapter.out.repository.CadastroRepository;
 import br.com.challenge.application.port.in.UpdateCadastroUseCase;
-import br.com.challenge.configuration.annotation.CustomBeanService;
+import br.com.challenge.infrastructure.configuration.annotation.CustomBeanService;
 import br.com.challenge.domain.model.Cadastro;
 
 @CustomBeanService

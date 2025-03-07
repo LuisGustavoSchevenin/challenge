@@ -1,7 +1,7 @@
 package br.com.challenge.application.port.in;
 
-import br.com.challenge.adapter.dto.CadastroResponse;
-import br.com.challenge.adapter.dto.CadastrosResponse;
+import br.com.challenge.infrastructure.adapter.in.web.dto.CadastroResponse;
+import br.com.challenge.infrastructure.adapter.in.web.dto.CadastrosResponse;
 
 public interface RetrieveCadastroUseCae {
 

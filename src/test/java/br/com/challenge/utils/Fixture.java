@@ -1,8 +1,8 @@
 package br.com.challenge.utils;
 
-import br.com.challenge.adapter.dto.CadastroRequest;
-import br.com.challenge.adapter.dto.CadastroResponse;
-import br.com.challenge.adapter.out.persistence.CadastroEntity;
+import br.com.challenge.infrastructure.adapter.in.web.dto.CadastroRequest;
+import br.com.challenge.infrastructure.adapter.in.web.dto.CadastroResponse;
+import br.com.challenge.infrastructure.adapter.persistence.entity.CadastroEntity;
 import br.com.challenge.domain.model.Cadastro;
 
 import java.time.LocalDateTime;

@@ -1,7 +1,7 @@
 package br.com.challenge.application.port.in;
 
-import br.com.challenge.adapter.dto.CadastroRequest;
-import br.com.challenge.adapter.dto.CadastroResponse;
+import br.com.challenge.infrastructure.adapter.in.web.dto.CadastroRequest;
+import br.com.challenge.infrastructure.adapter.in.web.dto.CadastroResponse;
 
 public interface UpdateCadastroUseCase {
 
